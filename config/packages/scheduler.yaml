@@ -1,0 +1,8 @@
+# scheduler:
+#     # Activate the Scheduler service
+#     enabled: true
+#     # Configure tasks that you want to schedule
+#     tasks:
+#         - command: 'app:envoi-mail-hebdo'
+#           cron: '0 * * * *'
+#           description: 'Envoi par mail des 20 photos les plus vues toutes les semaines'
