@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Supprimer l’image{% endblock %}
+
+{% block body %}
+    <h1>Supprimer l’image : {{ image.name }}</h1>
+
+    <p>Cette action est irréversible. Veux-tu vraiment continuer ?</p>
+
+    {{ form_start(form) }}
+        {{ form_row(form.confirm) }}
+        <button class="btn btn-danger">Supprimer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_image') }}" class="btn btn-secondary">Annuler</a>
+{% endblock %}
