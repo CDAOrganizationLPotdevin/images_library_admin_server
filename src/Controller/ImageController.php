@@ -15,7 +15,7 @@ class ImageController extends AbstractController
     public function list(EntityManagerInterface $em)
     {
         $client = HttpClient::create();
-        $response = $client->request('GET', 'http://localhost:8002/images');
+        $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
         $images=$response->toArray()["member"];
         return $this->render('image/list.html.twig', ['images' => $images]);
     }
@@ -44,7 +44,7 @@ class ImageController extends AbstractController
             ]);
 
             
-            $response = $client->request('GET', 'http://localhost:8002/images');
+            $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
             $images=$response->toArray()["member"];
             
             return $this->redirectToRoute('app_image', ['images' => $images]);
@@ -79,7 +79,7 @@ class ImageController extends AbstractController
                 ],
             ]);
 
-            $response = $client->request('GET', 'http://localhost:8002/images');
+            $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
             $images=$response->toArray()["member"];
 
             return $this->redirectToRoute('app_image', ['images' => $images]);
@@ -89,4 +89,5 @@ class ImageController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
 }
