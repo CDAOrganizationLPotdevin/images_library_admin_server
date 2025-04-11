@@ -11,11 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
-    #[Route('/image', name: 'app_image')]
+    #[Route('/', name: 'app_image')]
     public function list(EntityManagerInterface $em)
     {
         $client = HttpClient::create();
-        $response = $client->request('GET', 'http://localhost:8002/api/images');
+        $response = $client->request('GET', 'http://localhost:8002/images');
         $images=$response->toArray()["member"];
         return $this->render('image/list.html.twig', ['images' => $images]);
     }
@@ -24,7 +24,7 @@ class ImageController extends AbstractController
     public function edit(int $id, Request $request, EntityManagerInterface $em)
     {
         $client = HttpClient::create();
-        $response = $client->request('GET', 'http://localhost:8002/api/images/'.$id);
+        $response = $client->request('GET', 'http://localhost:8002/images/'.$id);
         $image=$response->toArray();
 
         $form = $this->createForm(ImageType::class, $image);
@@ -34,7 +34,7 @@ class ImageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $client = HttpClient::create();
-            $response = $client->request('PATCH', 'http://localhost:8002/api/images/'.$data['id'], [
+            $response = $client->request('PATCH', 'http://localhost:8002/images/'.$data['id'], [
                 'headers' => [
                     'Content-Type' => 'application/merge-patch+json',
                 ],
@@ -44,7 +44,7 @@ class ImageController extends AbstractController
             ]);
 
             
-            $response = $client->request('GET', 'http://localhost:8002/api/images');
+            $response = $client->request('GET', 'http://localhost:8002/images');
             $images=$response->toArray()["member"];
             
             return $this->redirectToRoute('app_image', ['images' => $images]);
@@ -60,7 +60,7 @@ class ImageController extends AbstractController
     public function delete(int $id, Request $request, EntityManagerInterface $em)
     {
         $client = HttpClient::create();
-        $response = $client->request('GET', 'http://localhost:8002/api/images/'.$id);
+        $response = $client->request('GET', 'http://localhost:8002/images/'.$id);
         $image=$response->toArray();
 
         $form = $this->createForm(DeleteImageType::class, $image);
@@ -70,7 +70,7 @@ class ImageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $client = HttpClient::create();
-            $response = $client->request('PATCH', 'http://localhost:8002/api/images/'.$data['id'], [
+            $response = $client->request('PATCH', 'http://localhost:8002/images/'.$data['id'], [
                 'headers' => [
                     'Content-Type' => 'application/merge-patch+json',
                 ],
@@ -79,7 +79,7 @@ class ImageController extends AbstractController
                 ],
             ]);
 
-            $response = $client->request('GET', 'http://localhost:8002/api/images');
+            $response = $client->request('GET', 'http://localhost:8002/images');
             $images=$response->toArray()["member"];
 
             return $this->redirectToRoute('app_image', ['images' => $images]);
