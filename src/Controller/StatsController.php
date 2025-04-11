@@ -13,7 +13,7 @@ class StatsController extends AbstractController
     {
         $client = HttpClient::create();
         // dd($client);
-        $response = $client->request('GET', 'http://localhost:8002/api/images');
+        $response = $client->request('GET', 'http://localhost:8002/images');
         $images=$response->toArray()["member"];
         return $this->render('image/stats.html.twig', ['images' => $images]);
     }
