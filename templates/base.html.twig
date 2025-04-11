@@ -8,10 +8,42 @@
         {% endblock %}
 
         {% block javascripts %}
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
+        <style>
+            nav {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #333;
+                color: white;
+                padding: 10px;
+                margin: 5px 0px 20px 0px;
+            }
+            nav ul {
+                display: flex;
+                gap: 10px;
+                list-style-type: none;
+                padding: 0;
+            }
+            nav ul li {
+                margin: 0;
+            }
+            nav ul li a {
+                color: white;
+                text-decoration: none;
+            }
+        </style>
     </head>
     <body>
+        <nav>
+            <ul>
+                {# <li><a href="{{ path('app_accueil') }}">Accueil</a></li> #}
+                <li><a href="{{ path('app_image') }}">Images</a></li>
+                <li><a href="{{ path('app_stats') }}">Stats</a></li>
+            </ul>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>

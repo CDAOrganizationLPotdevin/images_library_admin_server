@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau des images{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    {% for image in images %}
+    
+        {% if not image.deleted %}
+        <div class="col-lg-5 d-flex flex-row">
+            <div class="image-box">
+                <img src="{{ image.url }}" alt="{{ image.name }}">
+            </div>
+            <div class="w-100 text-center">
+                <strong>{{ image.name }}</strong><br>
+                <a href="{{ path('image_edit', {id: image.id}) }}">✏️ Modifier</a>
+                <a href="{{ path('image_delete', {id: image.id}) }}">🗑️ Supprimer</a>
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+        <span>Aucune image.</span>
+    {% endfor %}
+</div>
+{% endblock %}

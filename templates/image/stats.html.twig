@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+    <section>
+        <span>Plus téléchargé sur 24 heures</span>
+        <span>Plus téléchargé sur 7 jours</span>
+        <span>Plus téléchargé all time</span>
+        <span>Evolution </span>
+        <form action="{{ path('send_email') }}" method="post">
+          <button type="submit">Envoyer Email</button>
+        </form>
+    </section>
+
+    {% for label, messages in app.flashes %}
+      {% for message in messages %}
+          <div class="alert alert-{{ label }}">
+              {{ message }}
+          </div>
+      {% endfor %}
+  {% endfor %}
+
+{% endblock %}
