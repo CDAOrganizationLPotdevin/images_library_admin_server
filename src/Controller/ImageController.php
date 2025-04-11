@@ -75,7 +75,7 @@ class ImageController extends AbstractController
                     'Content-Type' => 'application/merge-patch+json',
                 ],
                 'json' => [
-                    'is_deleted' => '1'
+                    'is_deleted' => true
                 ],
             ]);
 
