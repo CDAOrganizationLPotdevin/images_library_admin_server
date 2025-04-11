@@ -3,15 +3,145 @@
 {% block title %}Statistiques{% endblock %}
 
 {% block body %}
-<div>
-  <canvas id="myChart"></canvas>
+
+<a href="{{ path('export_excel') }}" class="btn btn-success">
+    Exporter en Excel
+</a>
+<div class="row container_stats">
+  <div class="col-5">
+    <h3>Les 5 les plus téléchargées sur 24 heures</h3>
+    <canvas id="chart_best_of_day"></canvas>
+  </div>
+  <div class="col-5">
+    <h3>Les 5 les plus téléchargées sur 7 jours</h3>
+    <canvas id="chart_best_of_week"></canvas>
+  </div>
+  <div class="col-5">
+    <h3>Les 5 les plus téléchargées all time</h3>
+    <canvas id="chart_best_all_time"></canvas>
+  </div>
+  <div class="col-5">
+    <h3>Evolution sur les 12 derniers mois</h3>
+    <canvas id="chart_evolution_last_year"></canvas>
+  </div>
 </div>
 
-    <section>
-        <span>Plus téléchargé sur 24 heures</span>
-        <span>Plus téléchargé sur 7 jours</span>
-        <span>Plus téléchargé all time</span>
-        <span>Evolution </span>
-    </section>
+
+<script>
+  const ctx_day = document.getElementById('chart_best_of_day');
+  const ctx_week = document.getElementById('chart_best_of_week');
+  const ctx_all_time = document.getElementById('chart_best_all_time');
+  const ctx_last_year = document.getElementById('chart_evolution_last_year');
+  
+  const BestOfDayStats = {
+    labels: [],
+    data: []
+  };
+  const BestOfWeekStats = {
+    labels: [],
+    data: []
+  };
+  const BestEverStats = {
+    labels: [],
+    data: []
+  };
+  const lastYearStats = {
+    labels: [],
+    data: []
+  };
+
+  {% for label, value in best_of_day %}
+    BestOfDayStats.labels.push("{{ label }}");
+    BestOfDayStats.data.push({{ value }});
+  {% endfor %}
+
+  {% for label, value in best_of_week %}
+    BestOfWeekStats.labels.push("{{ label }}");
+    BestOfWeekStats.data.push({{ value }});
+  {% endfor %}
+
+  {% for label, value in best_ever %}
+    BestEverStats.labels.push("{{ label }}");
+    BestEverStats.data.push({{ value }});
+  {% endfor %}
+  
+  {% for label, value in last_year %}
+    lastYearStats.labels.push("{{ label }}");
+    lastYearStats.data.push({{ value }});
+  {% endfor %}
+  
+  new Chart(ctx_day, {
+    type: 'doughnut',
+    data: {
+      labels: BestOfDayStats.labels,
+      datasets: [{
+        label: '# of Downloads',
+        data: BestOfDayStats.data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(ctx_week, {
+    type: 'doughnut',
+    data: {
+      labels: BestOfWeekStats.labels,
+      datasets: [{
+        label: '# of Downloads',
+        data: BestOfWeekStats.data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(ctx_all_time, {
+    type: 'doughnut',
+    data: {
+      labels: BestEverStats.labels,
+      datasets: [{
+        label: '# of Downloads',
+        data: BestEverStats.data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(ctx_last_year, {
+    type: 'line',
+    data: {
+      labels: lastYearStats.labels,
+      datasets: [{
+        label: '# of Downloads',
+        data: lastYearStats.data,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 {% endblock %}
