@@ -1,0 +1,11 @@
+<h2>Top 20 des images téléchargées cette semaine</h2>
+
+<ul>
+    {% for image in images %}
+        <li>
+            <strong>{{ image.name }}</strong><br>
+            Nombre de téléchargements : {{ image.nbDownload }}<br>
+            <a href="{{ image.url }}">Voir l’image</a>
+        </li>
+    {% endfor %}
+</ul>

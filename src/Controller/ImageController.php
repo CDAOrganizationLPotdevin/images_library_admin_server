@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
-    #[Route('/image', name: 'app_image')]
+    #[Route('/', name: 'app_image')]
     public function list(EntityManagerInterface $em)
     {
         $client = HttpClient::create();
