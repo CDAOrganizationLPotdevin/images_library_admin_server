@@ -25,7 +25,7 @@ class LcEmailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Appel au serveur API
-        $response = $this->client->request('GET', 'https://127.0.0.1:8002/api/images');
+        $response = $this->client->request('GET', 'http://127.0.0.1:8002/api/images');
         $data = $response->toArray();
 
         $images = $data['member']; 
