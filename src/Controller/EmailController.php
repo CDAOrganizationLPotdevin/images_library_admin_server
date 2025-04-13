@@ -24,6 +24,7 @@ class EmailController extends AbstractController
 
     public function __construct(private LcEmailCommand $lcEmailCommand) {}
 
+    // Route permettant l'envoie du mail des images les plus télécharger
     #[Route('/send-top-images-email', name: 'send_top_images_email')]
     public function sendTopImagesEmail(TopImagesMailer $topImagesMailer): Response
     {
@@ -45,6 +46,7 @@ class EmailController extends AbstractController
     }
 
 
+    // Route permettant l'envoie du mail des statistiques
     #[Route('/send-email', name: 'send_email', methods: ['POST'])]
     public function sendTopImages(HttpFoundationRequest $request, KernelInterface $kernel): RedirectResponse
     {

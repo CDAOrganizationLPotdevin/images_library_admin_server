@@ -13,12 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StatsController extends AbstractController
 {
+    // Route permettant l'affichage des statistiques
     #[Route('/stats', name: 'app_stats')]
     public function list(EntityManagerInterface $em)
     {
 
-        $lastYear = (new \DateTimeImmutable())->modify('-1 year')->format('Y');
-        $last_year = $this->getMonthlyDownloadsForYear((int) $lastYear);
         $currentYear = (new \DateTimeImmutable())->format('Y');
         $current_year = $this->getMonthlyDownloadsForYear((int) $currentYear);
 
@@ -33,11 +32,11 @@ class StatsController extends AbstractController
             'best_of_day' => $best_of_the_day['data'],
             'best_of_week' => $best_of_the_week['data'],
             'best_ever' => $best_ever['data'],
-            'last_year' => $last_year, // Les données pour l'année actuelle
-            'current_year' => $current_year,
+            'current_year' => $current_year, // Les données pour l'année actuelle
         ]);
         
     }
+    // Route permettant l'export des statistiques
     #[Route('/export-excel', name: 'export_excel')]
     public function exportExcel(): StreamedResponse
     {
@@ -83,6 +82,7 @@ class StatsController extends AbstractController
         return $response;
     }
 
+    // Méthode de récupération des données pour l'export
     private function getDataForExport():array
     {
         $client = HttpClient::create();
@@ -122,7 +122,7 @@ class StatsController extends AbstractController
 
         return array_slice($data, 0, 20, true); // Get top 5 images
     }
-
+    // Récupération des stats par period
     private function getTopDownloadsByPeriod(string $period, string $title): array
     {
         $client = HttpClient::create();
@@ -171,7 +171,7 @@ class StatsController extends AbstractController
     
     
 
-
+    // récupération des stats sur l'année actuelle
     private function getMonthlyDownloadsForYear(int $year): array
     {
         $client = HttpClient::create();
@@ -183,7 +183,7 @@ class StatsController extends AbstractController
 
         foreach ($logs as $log) {
             $logDate = new \DateTimeImmutable($log['date']);
-            
+
             if ($logDate->format('Y') == $year) {
                 $month = (int) $logDate->format('m'); 
                 

@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
+    // Route permettant l'affichage des images
     #[Route('/', name: 'app_image')]
     public function list(EntityManagerInterface $em)
     {
@@ -19,7 +20,7 @@ class ImageController extends AbstractController
         $images=$response->toArray()["member"];
         return $this->render('image/list.html.twig', ['images' => $images]);
     }
-
+    // Route permettant l'édition d'une image par id
     #[Route('/image/edit/{id}', name: 'image_edit')]
     public function edit(int $id, Request $request, EntityManagerInterface $em)
     {
@@ -56,6 +57,7 @@ class ImageController extends AbstractController
         ]);
     }
 
+    // Route permettant la suppression d'une image par id
     #[Route('/image/delete/{id}', name: 'image_delete')]
     public function delete(int $id, Request $request, EntityManagerInterface $em)
     {

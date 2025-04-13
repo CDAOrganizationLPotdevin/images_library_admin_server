@@ -25,7 +25,7 @@
   </div>
   <div class="col-5">
     <h3>Evolution sur les 12 derniers mois</h3>
-    <canvas id="chart_evolution_last_year"></canvas>
+    <canvas id="chart_evolution_current_year"></canvas>
   </div>
 
 </div>
@@ -34,7 +34,7 @@
   const ctx_day = document.getElementById('chart_best_of_day');
   const ctx_week = document.getElementById('chart_best_of_week');
   const ctx_all_time = document.getElementById('chart_best_all_time');
-  const ctx_last_year = document.getElementById('chart_evolution_last_year');
+  const ctx_current_year = document.getElementById('chart_evolution_current_year');
   
   const BestOfDayStats = {
     labels: [],
@@ -48,7 +48,7 @@
     labels: [],
     data: []
   };
-  const lastYearStats = {
+  const currentYearStats = {
     labels: [],
     data: []
   };
@@ -68,9 +68,9 @@
     BestEverStats.data.push("{{ value }}");
   {% endfor %}
   
-  {% for label, value in last_year %}
-    lastYearStats.labels.push("{{ label }}");
-    lastYearStats.data.push("{{ value }}");
+  {% for label, value in current_year %}
+    currentYearStats.labels.push("{{ label }}");
+    currentYearStats.data.push("{{ value }}");
   {% endfor %}
   
   new Chart(ctx_day, {
@@ -127,13 +127,13 @@
       }
     }
   });
-  new Chart(ctx_last_year, {
+  new Chart(ctx_current_year, {
     type: 'line',
     data: {
-      labels: lastYearStats.labels,
+      labels: currentYearStats.labels,
       datasets: [{
         label: '# of Downloads',
-        data: lastYearStats.data,
+        data: currentYearStats.data,
         borderWidth: 1
       }]
     },

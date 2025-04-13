@@ -11,6 +11,7 @@ class TopImagesProcessor
         private TopImagesMailer $mailer
     ) {}
 
+    // Méthodes permettant l'envoie d'un mail
     public function processAndSend(): void
     {
         $response = $this->httpClient->request('GET', 'https://127.0.0.1:8002/api/images');

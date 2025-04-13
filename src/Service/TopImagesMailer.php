@@ -13,6 +13,7 @@ class TopImagesMailer
         private ParameterBagInterface $params
     ) {}
 
+    // Méthode d'envoie des 20 meilleurs images
     public function sendTopImagesEmail(array $images): void
     {
         $recipient = $this->params->get('top_images_recipient_email');
