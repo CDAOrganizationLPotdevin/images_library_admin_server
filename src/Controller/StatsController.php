@@ -26,67 +26,15 @@ class StatsController extends AbstractController
         $best_of_the_week = $this->getTopDownloadsByPeriod('-7 days', 'best_of_the_week');
         $best_ever = $this->getTopDownloadsByPeriod('-1000 years', 'best_ever'); // tous les temps
 
-        // dd($best_of_the_day);
-        // $client = HttpClient::create();
-        // $response = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
-        // $logs=$response->toArray();
-        // // Date limite = maintenant - 24h
-        // $now = new \DateTimeImmutable();
-        // $limit = $now->sub(new \DateInterval('P1D')); // "Period of 1 Day"
 
-        // $recentLogs = array_filter($logs['member'], function ($log) use ($limit) {
-        //     $logDate = new \DateTimeImmutable($log['date']);
-        //     return $logDate > $limit;
-        // });
-        // echo '<pre>';
-        // print_r($recentLogs);
-        // echo '</pre>';
-        
-        // return $this->render('image/stats.html.twig', [
-        //     'best_of_day' => [
-        //         "image 1"=>9,
-        //         "image 2"=>7,
-        //         "image 3"=>5,
-        //         "image 4"=>2,
-        //         "image 5"=>2,
-        //     ],
-        //     'best_of_week' => [
-        //         "image 1"=>39,
-        //         "image 2"=>37,
-        //         "image 3"=>25,
-        //         "image 4"=>22,
-        //         "image 5"=>15,
-        //     ],
-        //     'best_ever' => [
-        //         "image 1"=>359,
-        //         "image 2"=>337,
-        //         "image 3"=>245,
-        //         "image 4"=>232,
-        //         "image 5"=>195,
-        //     ],
-        //     'last_year' => [
-        //         'Janvier'=>15, 
-        //         'Fevrier'=>20, 
-        //         'Mars'=>25, 
-        //         'Avril'=>35, 
-        //         'Mai'=>50, 
-        //         'Juin'=>70, 
-        //         'Juillet'=>95, 
-        //         'Aout'=>125, 
-        //         'Septembre'=>160, 
-        //         'Octobre'=>200, 
-        //         'Novembre'=>245, 
-        //         'Decembre'=>300, 
-        //     ],
-        // ]);
+        $data = $this->getDataForExport();
 
         return $this->render('image/stats.html.twig', [
-            'best_of_day' => $best_of_the_day,
-            'best_of_week' => $best_of_the_week,
-            'best_ever' => $best_ever,
-            'last_year' => $last_year,
-            'current_year' => $current_year,
+            'best_of_day' => $best_of_the_day['data'],
+            'best_of_week' => $best_of_the_week['data'],
+            'best_ever' => $best_ever['data'],
             'last_year' => $last_year, // Les données pour l'année actuelle
+            'current_year' => $current_year,
         ]);
         
     }
@@ -101,25 +49,23 @@ class StatsController extends AbstractController
         $sheet = $spreadsheet->getActiveSheet();
 
         $sheet->fromArray(
-            [['id image', 'titre image', 'nombre téléchargement', 'nombre ouvertures']],
+            [['id image', 'titre image', 'nombre téléchargement']],
             null, 
             'A1'
         );
 
-        $data = [
-            ['1', 'image 1', "23","245"],
-            ['2', 'image 2', "23","245"],
-            ['3', 'image 3', "23","245"],
-            ['4', 'image 4', "23","245"],
-            ['5', 'image 5', "23","245"],
-            ['6', 'image 6', "23","245"],
-            ['7', 'image 7', "23","245"],
-            ['8', 'image 8', "23","245"],
-            ['9', 'image 9', "23","245"],
-            ['10', 'image 10', "23","245"],
-        ];
+        $data = $this->getDataForExport();
+        $content=[];
 
-        $sheet->fromArray($data, null, 'A2');
+        foreach ($data as $image) {
+            $content[] = [
+                $image['id'],
+                $image['name'],
+                $image['downloads'],
+            ];
+        }
+
+        $sheet->fromArray($content, null, 'A2');
 
         $response = new StreamedResponse(function () use ($spreadsheet) {
             $writer = new Xlsx($spreadsheet);
@@ -137,20 +83,62 @@ class StatsController extends AbstractController
         return $response;
     }
 
+    private function getDataForExport():array
+    {
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
+        $images = $response->toArray()["member"];
+        
+        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
+        $logs = $logsResponse->toArray()["member"];
+
+        $tabImages=[];
+
+        foreach ($logs as $log) {
+            $logDate = new \DateTimeImmutable($log['date']);
+            $imageIri = $log['images'] ?? null;
+            if ($imageIri) {
+                $id = basename($imageIri);
+                $tabImages[$id] = ($tabImages[$id] ?? 0) + 1;
+            }
+        }
+
+        $data = [];
+
+        foreach ($images as $image) {
+            if (isset($image['id'])) {
+                $data[] = [
+                    'id' => $image['id'],
+                    'name' => $image['name'],
+                    'downloads' => $tabImages[$image['id']]??0, // Placeholder for download count
+                ];
+            }
+        }
+        // Sort by downloads in descending order
+        usort($data, function ($a, $b) {
+            return $b['downloads'] <=> $a['downloads'];
+        });
+
+
+        return array_slice($data, 0, 20, true); // Get top 5 images
+    }
+
     private function getTopDownloadsByPeriod(string $period, string $title): array
     {
         $client = HttpClient::create();
     
-        $response = $client->request('GET', 'http://localhost:8001/images');
+        $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
         $images = $response->toArray()["member"];
-    
+        
+        // dd($images);
+
         $imagesById = [];
         foreach ($images as $image) {
             if (isset($image['id'])) {
                 $imagesById[$image['id']] = $image;
             }
         }
-        $logsResponse = $client->request('GET', 'http://localhost:8001/logs?pagination=false');
+        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
         $logs = $logsResponse->toArray()["member"];
     
         $startDate = new \DateTimeImmutable($period);
@@ -169,7 +157,7 @@ class StatsController extends AbstractController
         $finalData = [];
         foreach ($downloadCounts as $id => $count) {
             if (isset($imagesById[$id])) {
-                $finalData[$imagesById[$id]['title'] ?? 'Image ' . $id] = $count;
+                $finalData[$imagesById[$id]['name'] ?? 'Image ' . $id] = $count;
             }
         }
     
@@ -188,7 +176,7 @@ class StatsController extends AbstractController
     {
         $client = HttpClient::create();
 
-        $logsResponse = $client->request('GET', 'http://localhost:8001/logs?pagination=false');
+        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
         $logs = $logsResponse->toArray()["member"];
 
         $monthlyDownloads = array_fill(1, 12, 0); 
