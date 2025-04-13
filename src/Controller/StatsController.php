@@ -26,7 +26,7 @@ class StatsController extends AbstractController
         $best_of_the_week = $this->getTopDownloadsByPeriod('-7 days', 'best_of_the_week');
         $best_ever = $this->getTopDownloadsByPeriod('-1000 years', 'best_ever'); // tous les temps
 
-        dd($best_of_the_day);
+        // dd($best_of_the_day);
         // $client = HttpClient::create();
         // $response = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
         // $logs=$response->toArray();

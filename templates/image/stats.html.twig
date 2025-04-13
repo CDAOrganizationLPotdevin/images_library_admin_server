@@ -7,6 +7,9 @@
 <a href="{{ path('export_excel') }}" class="btn btn-success">
     Exporter en Excel
 </a>
+<form action="{{ path('send_email') }}" method="POST" style="margin-bottom: 20px;">
+  <button type="submit" class="btn btn-primary">Envoyer le top 20 des images les plus téléchargées par e-mail</button>
+</form>
 <div class="row container_stats">
   <div class="col-5">
     <h3>Les 5 les plus téléchargées sur 24 heures</h3>
@@ -143,12 +146,12 @@
     }
   });
 </script>
-    {% for label, messages in app.flashes %}
-      {% for message in messages %}
-          <div class="alert alert-{{ label }}">
-              {{ message }}
-          </div>
-      {% endfor %}
+  {% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
   {% endfor %}
 
 {% endblock %}
