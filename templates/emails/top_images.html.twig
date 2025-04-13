@@ -5,7 +5,7 @@
         <li>
             <strong>{{ image.name }}</strong><br>
             Nombre de téléchargements : {{ image.nbDownload }}<br>
-            <a href="{{ image.url }}">Voir l’image</a>
+            <a href="http://localhost:8000/image_proxy_display/{{ image.id }}">Voir l’image</a>
         </li>
     {% endfor %}
 </ul>

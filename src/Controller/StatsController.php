@@ -86,10 +86,10 @@ class StatsController extends AbstractController
     private function getDataForExport():array
     {
         $client = HttpClient::create();
-        $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
+        $response = $client->request('GET', 'http://localhost:8002/api/images?pagination=false');
         $images = $response->toArray()["member"];
         
-        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
+        $logsResponse = $client->request('GET', 'http://localhost:8002/api/logs?pagination=false');
         $logs = $logsResponse->toArray()["member"];
 
         $tabImages=[];
@@ -127,7 +127,7 @@ class StatsController extends AbstractController
     {
         $client = HttpClient::create();
     
-        $response = $client->request('GET', 'http://localhost:8002/images?pagination=false');
+        $response = $client->request('GET', 'http://localhost:8002/api/images?pagination=false');
         $images = $response->toArray()["member"];
         
         // dd($images);
@@ -138,7 +138,7 @@ class StatsController extends AbstractController
                 $imagesById[$image['id']] = $image;
             }
         }
-        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
+        $logsResponse = $client->request('GET', 'http://localhost:8002/api/logs?pagination=false');
         $logs = $logsResponse->toArray()["member"];
     
         $startDate = new \DateTimeImmutable($period);
@@ -176,7 +176,7 @@ class StatsController extends AbstractController
     {
         $client = HttpClient::create();
 
-        $logsResponse = $client->request('GET', 'http://localhost:8002/logs?pagination=false');
+        $logsResponse = $client->request('GET', 'http://localhost:8002/api/logs?pagination=false');
         $logs = $logsResponse->toArray()["member"];
 
         $monthlyDownloads = array_fill(1, 12, 0); 

@@ -11,7 +11,7 @@
         {% if not image.deleted %}
         <div class="col-lg-5 d-flex flex-row">
             <div class="image-box">
-                <img src="{{ image.url }}" alt="{{ image.name }}">
+                <img src="http://localhost:8002/images_chat/{{ image.filename }}" alt="{{ image.name }}">
             </div>
             <div class="w-100 text-center">
                 <strong>{{ image.name }}</strong><br>

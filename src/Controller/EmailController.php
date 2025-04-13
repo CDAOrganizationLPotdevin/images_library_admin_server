@@ -29,12 +29,16 @@ class EmailController extends AbstractController
     {
         $client = HttpClient::create();
 
-        $response = $client->request('GET', 'https://127.0.0.1:8002/api/images');
-        $images = $response->toArray();
-
-        usort($images, fn($a, $b) => $b['nb_download'] <=> $a['nb_download']);
+        $response = $client->request('GET', 'http://127.0.0.1:8002/api/images')->toArray();
+        $images = $response['member'];
+        
+        usort($images, function ($a, $b) {
+            if (is_array($a) && is_array($b) && isset($a['nb_download'], $b['nb_download'])) {
+                return $b['nb_download'] <=> $a['nb_download'];
+            }
+            return 0; // If not, keep original order
+        });
         $topImages = array_slice($images, 0, 20);
-
         $topImagesMailer->sendTopImagesEmail($topImages);
 
         return new Response("Email envoyé avec les 20 images les plus téléchargées.");
