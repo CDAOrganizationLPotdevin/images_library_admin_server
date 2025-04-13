@@ -51,23 +51,23 @@
   };
 
   {% for label, value in best_of_day %}
-    BestOfDayStats.labels.push("{{ label }}");
-    BestOfDayStats.data.push({{ value }});
+    BestOfDayStats.labels.push("{{label}}");
+    BestOfDayStats.data.push("{{value}}");
   {% endfor %}
 
   {% for label, value in best_of_week %}
     BestOfWeekStats.labels.push("{{ label }}");
-    BestOfWeekStats.data.push({{ value }});
+    BestOfWeekStats.data.push("{{ value }}");
   {% endfor %}
 
   {% for label, value in best_ever %}
     BestEverStats.labels.push("{{ label }}");
-    BestEverStats.data.push({{ value }});
+    BestEverStats.data.push("{{ value }}");
   {% endfor %}
   
   {% for label, value in last_year %}
     lastYearStats.labels.push("{{ label }}");
-    lastYearStats.data.push({{ value }});
+    lastYearStats.data.push("{{ value }}");
   {% endfor %}
   
   new Chart(ctx_day, {
